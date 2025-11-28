@@ -1,0 +1,158 @@
+﻿<Window x:Class="TextEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Текстовий редактор" Height="600" Width="900">
+    <Window.CommandBindings>
+        <CommandBinding Command="New" Executed="New_Executed"/>
+        <CommandBinding Command="Open" Executed="Open_Executed"/>
+        <CommandBinding Command="Save" Executed="Save_Executed"/>
+        <CommandBinding Command="SaveAs" Executed="SaveAs_Executed"/>
+        <CommandBinding Command="Cut" Executed="Cut_Executed"/>
+        <CommandBinding Command="Copy" Executed="Copy_Executed"/>
+        <CommandBinding Command="Paste" Executed="Paste_Executed"/>
+        <CommandBinding Command="Undo" Executed="Undo_Executed"/>
+        <CommandBinding Command="Redo" Executed="Redo_Executed"/>
+        <CommandBinding Command="SelectAll" Executed="SelectAll_Executed"/>
+    </Window.CommandBindings>
+
+    <DockPanel>
+        <!-- Меню -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Файл">
+                <MenuItem Header="_Створити" Command="New" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="_Відкрити..." Command="Open" InputGestureText="Ctrl+O"/>
+                <MenuItem Header="_Зберегти" Command="Save" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Зберегти _як..." Command="SaveAs"/>
+                <Separator/>
+                <MenuItem Header="Дру_к..." Click="Print_Click" InputGestureText="Ctrl+P"/>
+                <Separator/>
+                <MenuItem Header="Ви_хід" Click="Exit_Click"/>
+            </MenuItem>
+
+            <MenuItem Header="_Правка">
+                <MenuItem Header="_Скасувати" Command="Undo" InputGestureText="Ctrl+Z"/>
+                <MenuItem Header="_Повторити" Command="Redo" InputGestureText="Ctrl+Y"/>
+                <Separator/>
+                <MenuItem Header="Ви_різати" Command="Cut" InputGestureText="Ctrl+X"/>
+                <MenuItem Header="_Копіювати" Command="Copy" InputGestureText="Ctrl+C"/>
+                <MenuItem Header="Вст_авити" Command="Paste" InputGestureText="Ctrl+V"/>
+                <MenuItem Header="В_идалити" Click="Delete_Click" InputGestureText="Del"/>
+                <Separator/>
+                <MenuItem Header="Виділити _все" Command="SelectAll" InputGestureText="Ctrl+A"/>
+                <Separator/>
+                <MenuItem Header="_Знайти..." Click="Find_Click" InputGestureText="Ctrl+F"/>
+                <MenuItem Header="За_мінити..." Click="Replace_Click" InputGestureText="Ctrl+H"/>
+            </MenuItem>
+
+            <MenuItem Header="_Формат">
+                <MenuItem Header="_Шрифт..." Click="Font_Click"/>
+                <MenuItem Header="_Колір тексту..." Click="TextColor_Click"/>
+                <MenuItem Header="Колір _фону..." Click="BackgroundColor_Click"/>
+                <Separator/>
+                <MenuItem Header="_Вирівнювання">
+                    <MenuItem Header="По _лівому краю" Click="AlignLeft_Click"/>
+                    <MenuItem Header="По _центру" Click="AlignCenter_Click"/>
+                    <MenuItem Header="По _правому краю" Click="AlignRight_Click"/>
+                    <MenuItem Header="По _ширині" Click="AlignJustify_Click"/>
+                </MenuItem>
+                <MenuItem Header="_Відступи..." Click="Indentation_Click"/>
+                <MenuItem Header="_Маркери" Click="Bullets_Click"/>
+                <MenuItem Header="_Нумерація" Click="Numbering_Click"/>
+            </MenuItem>
+
+            <MenuItem Header="_Вставка">
+                <MenuItem Header="_Зображення..." Click="InsertImage_Click" InputGestureText="Ctrl+I"/>
+            </MenuItem>
+
+            <MenuItem Header="_Довідка">
+                <MenuItem Header="_Про програму..." Click="About_Click"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- Панель інструментів -->
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button Command="New" ToolTip="Створити (Ctrl+N)" Content="Новий"/>
+                <Button Command="Open" ToolTip="Відкрити (Ctrl+O)" Content="Відкрити"/>
+                <Button Command="Save" ToolTip="Зберегти (Ctrl+S)" Content="Зберегти"/>
+                <Separator/>
+                <Button Command="Cut" ToolTip="Вирізати (Ctrl+X)" Content="Вирізати"/>
+                <Button Command="Copy" ToolTip="Копіювати (Ctrl+C)" Content="Копіювати"/>
+                <Button Command="Paste" ToolTip="Вставити (Ctrl+V)" Content="Вставити"/>
+                <Separator/>
+                <Button Command="Undo" ToolTip="Скасувати (Ctrl+Z)" Content="↶"/>
+                <Button Command="Redo" ToolTip="Повторити (Ctrl+Y)" Content="↷"/>
+            </ToolBar>
+
+            <ToolBar>
+                <ComboBox Name="FontFamilyComboBox" Width="150" ToolTip="Шрифт"/>
+                <ComboBox Name="FontSizeComboBox" Width="60" ToolTip="Розмір"/>
+                <Separator/>
+                <ToggleButton Name="BoldButton" Click="Bold_Click" ToolTip="Жирний (Ctrl+B)">
+                    <TextBlock FontWeight="Bold">Ж</TextBlock>
+                </ToggleButton>
+                <ToggleButton Name="ItalicButton" Click="Italic_Click" ToolTip="Курсив (Ctrl+I)">
+                    <TextBlock FontStyle="Italic">К</TextBlock>
+                </ToggleButton>
+                <ToggleButton Name="UnderlineButton" Click="Underline_Click" ToolTip="Підкреслений (Ctrl+U)">
+                    <TextBlock TextDecorations="Underline">П</TextBlock>
+                </ToggleButton>
+                <Separator/>
+                <Button Click="AlignLeft_Click" ToolTip="Вирівняти по лівому краю">
+                    <TextBlock>≡</TextBlock>
+                </Button>
+                <Button Click="AlignCenter_Click" ToolTip="Вирівняти по центру">
+                    <TextBlock>≡</TextBlock>
+                </Button>
+                <Button Click="AlignRight_Click" ToolTip="Вирівняти по правому краю">
+                    <TextBlock>≡</TextBlock>
+                </Button>
+                <Separator/>
+                <Button Click="Bullets_Click" ToolTip="Маркери">
+                    <TextBlock>•</TextBlock>
+                </Button>
+                <Button Click="Numbering_Click" ToolTip="Нумерація">
+                    <TextBlock>1.</TextBlock>
+                </Button>
+                <Separator/>
+                <Button Click="InsertImage_Click" ToolTip="Вставити зображення">
+                    <TextBlock>🖼️</TextBlock>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+
+        <!-- Рядок стану -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Name="StatusTextBlock" Text="Готово"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Name="CursorPositionTextBlock" Text="Рядок: 1, Стовпець: 1"/>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- Робоча область -->
+        <Grid>
+            <RichTextBox Name="MainTextBox" 
+                         AcceptsReturn="True" 
+                         AcceptsTab="True"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Auto">
+                <RichTextBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Скасувати" Command="Undo"/>
+                        <MenuItem Header="Повторити" Command="Redo"/>
+                        <Separator/>
+                        <MenuItem Header="Вирізати" Command="Cut"/>
+                        <MenuItem Header="Копіювати" Command="Copy"/>
+                        <MenuItem Header="Вставити" Command="Paste"/>
+                        <MenuItem Header="Видалити" Click="Delete_Click"/>
+                        <Separator/>
+                        <MenuItem Header="Виділити все" Command="SelectAll"/>
+                    </ContextMenu>
+                </RichTextBox.ContextMenu>
+            </RichTextBox>
+        </Grid>
+    </DockPanel>
+</Window>
