@@ -1,0 +1,92 @@
+program Lab7_MenuDialogs;
+
+uses
+  Forms, Dialogs, Menus, Controls;
+
+{$R *.RES}
+
+var
+  MForm: TForm;
+  MainMenu1: TMainMenu;
+  FileMenu, HelpMenu: TMenuItem;
+  SaveItem, ExitItem, InfoItem: TMenuItem;
+  PopUpMenu1: TPopupMenu;
+  PopUpInfo: TMenuItem;
+  Passwrd: String;
+
+procedure ExitProgram(Sender: TObject);
+begin
+  if MessageDlg('Закрити програму?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    MForm.Close;
+end;
+
+procedure ShowInfo(Sender: TObject);
+begin
+  MessageDlg('Меню розробив(ла)'#13#10+'студент(ка) гр. № ПІБ',
+    mtInformation, [mbOk], 0);
+end;
+
+begin
+  // --- Запит пароля перед створенням форми ---
+  if InputQuery('Вікно введення пароля', 'Введіть пароль:', Passwrd) then
+  begin
+    if Passwrd <> 'ПІБ' then
+    begin
+      ShowMessage('Пароль невірний!');
+      Halt; // Завершити програму
+    end;
+  end
+  else
+    Halt;
+
+  // --- Створення головної форми ---
+  Application.Initialize;
+  Application.CreateForm(TForm, MForm);
+  MForm.Caption := 'MMenu';
+  MForm.Width := 400;
+  MForm.Height := 300;
+
+  // --- Головне меню ---
+  MainMenu1 := TMainMenu.Create(MForm);
+  MForm.Menu := MainMenu1;
+
+  // File Menu
+  FileMenu := TMenuItem.Create(MainMenu1);
+  FileMenu.Caption := '&File';
+  MainMenu1.Items.Add(FileMenu);
+
+  SaveItem := TMenuItem.Create(FileMenu);
+  SaveItem.Caption := '&Save';
+  SaveItem.Checked := True;        // відзначено √
+  SaveItem.ShortCut := ShortCut(F2, []); // клавіша еквіваленту F2
+  FileMenu.Add(SaveItem);
+
+  ExitItem := TMenuItem.Create(FileMenu);
+  ExitItem.Caption := 'E&xit';
+  ExitItem.ShortCut := ShortCut(F3, []); // клавіша еквіваленту F3
+  ExitItem.OnClick := ExitProgram;
+  FileMenu.Add(ExitItem);
+
+  // Help Menu
+  HelpMenu := TMenuItem.Create(MainMenu1);
+  HelpMenu.Caption := '&Help';
+  MainMenu1.Items.Add(HelpMenu);
+
+  InfoItem := TMenuItem.Create(HelpMenu);
+  InfoItem.Caption := '&Info';
+  InfoItem.ShortCut := ShortCut(F1, []); // клавіша еквіваленту F1
+  InfoItem.OnClick := ShowInfo;
+  HelpMenu.Add(InfoItem);
+
+  // --- Контекстне меню ---
+  PopUpMenu1 := TPopUpMenu.Create(MForm);
+  PopUpInfo := TMenuItem.Create(PopUpMenu1);
+  PopUpInfo.Caption := '?Info';
+  PopUpInfo.OnClick := ShowInfo;
+  PopUpMenu1.Items.Add(PopUpInfo);
+  MForm.PopupMenu := PopUpMenu1;
+
+  // --- Запуск програми ---
+  Application.Run;
+end.
+
